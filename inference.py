@@ -1,12 +1,12 @@
 """
-inference.py — Anomaly detection inference on abnormal showroom videos.
+inference.py — OpenVAD-based anomaly detection inference on abnormal showroom videos.
 
 Inference pipeline:
-1. Load the trained anomaly autoencoder model.
+1. Load the trained OpenVAD model.
 2. For each video in ABNORMAL_VIDEO_DIR:
    a. Extract all frames.
    b. Detect and track persons using YOLOv8 + ByteTrack.
-   c. Crop each tracked person, preprocess, and compute anomaly score.
+   c. Crop each tracked person, preprocess, and compute EDL uncertainty score.
    d. Annotate the frame with bounding boxes, track IDs, and anomaly scores.
    e. Write annotated frames to an output video.
    f. Log per-frame, per-person anomaly scores to a CSV file.
@@ -37,13 +37,13 @@ def run_inference_on_video(video_path, model, detector, visualizer):
 
     For each frame:
     - Detect and track persons with YOLOv8 + ByteTrack.
-    - Compute anomaly scores for each tracked person.
+    - Compute EDL uncertainty-based anomaly scores for each tracked person.
     - Annotate and save the output video.
     - Collect anomaly data for CSV export.
 
     Args:
         video_path (str): Path to the input video.
-        model (AnomalyAutoencoder): Trained anomaly model.
+        model (OpenVADModel): Trained OpenVAD model.
         detector (PersonDetector): YOLOv8 person detector (with ByteTrack tracking).
         visualizer (Visualizer): Visualization utility.
 
@@ -190,12 +190,12 @@ def save_anomaly_csv(records, video_name):
 def run():
     """
     Full inference pipeline:
-    1. Load trained model.
+    1. Load trained OpenVAD model.
     2. Iterate all videos in ABNORMAL_VIDEO_DIR.
-    3. For each video: detect, track, score, annotate, and save results.
+    3. For each video: detect, track, score (EDL uncertainty), annotate, and save results.
     """
     print("=" * 60)
-    print("  INFERENCE PHASE — Anomaly detection on abnormal videos")
+    print("  INFERENCE PHASE — OpenVAD anomaly detection on abnormal videos")
     print("=" * 60)
 
     config.ensure_dirs()

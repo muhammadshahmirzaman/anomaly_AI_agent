@@ -56,14 +56,38 @@ TRACKER_TYPE = "bytetrack.yaml"
 # =============================================================================
 # ANOMALY MODEL SETTINGS
 # =============================================================================
-# Input size for cropped person regions fed to the autoencoder (width, height)
+# Input size for cropped person regions fed to the model (width, height)
 CROP_SIZE = (64, 128)
 
 # Number of input channels (3 for RGB)
 INPUT_CHANNELS = 3
 
-# Latent dimension of the autoencoder bottleneck
+# Latent dimension (kept for reference but superseded by FEATURE_DIM)
 LATENT_DIM = 128
+
+# =============================================================================
+# OpenVAD ARCHITECTURE SETTINGS
+# =============================================================================
+# Output dimension of the CNN feature extractor
+FEATURE_DIM = 256
+
+# Hidden dimension of GCN layers
+GCN_HIDDEN_DIM = 128
+
+# Number of planar normalizing flow layers for pseudo-anomaly generation
+NF_NUM_FLOWS = 4
+
+# Number of classes for EDL classifier (Normal + Anomalous)
+EDL_NUM_CLASSES = 2
+
+# Number of epochs over which to anneal the KL divergence term in EDL loss
+EDL_ANNEALING_EPOCHS = 10
+
+# Top-k ratio for MIL instance selection (fraction of bag used as key instances)
+MIL_TOP_K_RATIO = 0.1
+
+# Margin for triplet loss in feature space
+TRIPLET_MARGIN = 1.0
 
 # =============================================================================
 # TRAINING HYPERPARAMETERS
@@ -87,7 +111,8 @@ TRAIN_FRAME_SKIP = 5
 # INFERENCE SETTINGS
 # =============================================================================
 # Anomaly score threshold — persons above this score are flagged as anomalous
-ANOMALY_THRESHOLD = 0.02
+# (now uncertainty-based: 0 = certain normal, 1 = maximum uncertainty)
+ANOMALY_THRESHOLD = 0.5
 
 # Frame sampling rate for inference (1 = process every frame)
 INFER_FRAME_SKIP = 1
